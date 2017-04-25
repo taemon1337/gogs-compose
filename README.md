@@ -3,6 +3,9 @@
 
 The setup for this project assumes a blank Linux host (ubuntu 16.04) with git installed.
 
+First, we'll install docker, which includes docker-compose.  Then we'll start the gogs and postgres containers as defined in the docker-compose.yml file.  They will mount host volumes from /tmp/gogs-data and /tmp/gogs-postgres for persistence.  Then modify the pg_hba.conf file to allow remote login to gogs database and restart container.  Then login to gogs web app and configure it to talk to postgres.
+
+
 1. Clone repository
 ```
   git clone git@github.com:taemon1337/gogs-compose.git
@@ -62,10 +65,9 @@ If you are actually going to use Gogs in a production or production-like environ
 #### Volume Storage
 In the provided docker-compose.yml file, a host volume is mapped from /tmp/gogs-data and /tmp/gogs-postgres. You will want to make sure you have a robust storage mechanism (like Convoy/NFS, RAID volume, or w/e).
 
-
 #### Docker Swarm
 In addition, I've included a docker-swarm.yml compose version 3.1 file which can be deployed on a Docker Swarm if you go that route.  In this file, I'm using the convoy NFS plugin for swarm nodes to use for storage.
 
-#### Logging, Backup, Security
-In a real production environment, you want to take care of logging, backups, and securing the environment as well, but these are outside the scope of this demo.
+#### Logging, Backup, Security, and Performance
+In a real production environment, you want to take care of logging, backups, and securing the environment as well.  You will also want to make your system has the performance to support your workload, but all these are outside the scope of this demo.
 
