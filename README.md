@@ -43,7 +43,7 @@ First, we'll install docker, which includes docker-compose.  Then we'll start th
   http://127.0.0.1:3000/
 ```
 
-8. Enter the following values into the Gogs configuration
+8. Enter the following values into the Gogs web first-time run config
 ```
   Database Type:    'PostgreSQL'            # select from dropdown
   Host:             'postgres:5432'         # must match docker-compose.yml link
@@ -59,7 +59,7 @@ First, we'll install docker, which includes docker-compose.  Then we'll start th
 10. Create account, login and enjoy Gogs!
 
 
-### Additional Tasks
+## Additional Tasks
 If you are actually going to use Gogs in a production or production-like environment, you will need complete the following tasks:
 
 #### Volume Storage
