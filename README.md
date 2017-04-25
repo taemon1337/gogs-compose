@@ -4,37 +4,44 @@
 The setup for this project assumes a blank Linux host (ubuntu 16.04) with git installed.
 
 1. Clone repository
+```
   git clone git@github.com:taemon1337/gogs-compose.git
   cd gogs-compose/
-
+```
 
 2. Install Docker
+```
   ./bin/install_docker.sh
   docker -v
   docker-compose -v
-
+```
 
 3. Start docker-compose up
+```
   docker-compose up
-
+```
 
 4. Stop docker-compose up
+```
   <Ctrl+C>
-
+```
 
 5. Modify pg_hba.conf at /tmp/gogs-postgres/pg_hba.conf
+```
   host  gogs  postgres  md5
-
+```
 
 6. Restart docker-compose up
+```
   docker-compose up
-
-
-7. Visit Gogs web page
+```
+7. Visit Local Gogs web page
+```
   http://127.0.0.1:3000/
-
+```
 
 8. Enter the following values into the Gogs configuration
+```
   Database Type:    'PostgreSQL'            # select from dropdown
   Host:             'postgres:5432'         # must match docker-compose.yml link
   User:             'postgres'              # must match docker-compose.yml POSTGRES_USER and pg_hba.conf
@@ -42,10 +49,9 @@ The setup for this project assumes a blank Linux host (ubuntu 16.04) with git in
   Database Name:    'gogs'                  # must match docker-compose.yml POSTGRES_DB and pg_hba.conf
   Domain:           <domain-name>           # option so that git remote add '<domain-name>' is correct
   Application URL:  <machine-ip>:3000       # option so that links/redirects in gogs are accurate
-
+```
 
 9. Click 'Install Gogs'
-
 
 10. Create account, login and enjoy Gogs!
 
