@@ -1,0 +1,39 @@
+version: '3.1'
+networks:
+  app-net:
+    external: true
+  data-net:
+    external: true
+volumes:
+  postgres:
+    driver: convoy
+  data:
+    driver: convoy
+services:
+  app:
+    image: gogs/gogs:latest
+    volumes:
+      - data:/data
+    networks:
+      - app-net
+      - data-net
+    deploy:
+      labels:
+        - traefik.port=3000
+        - traefik.docker.network=app-net
+        - traefik.frontend.rule=Host:gogs.swarm
+      placement:
+        constraints: [node.role == manager]
+  postgres:
+    image: postgres:alpine
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password123
+    networks:
+      - data-net
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+

@@ -1,76 +1,65 @@
 # gogs-compose
-## Setup gogs with docker compose
+## Private Github Clone with Gogs and Docker in 10 Steps
 
-### Host Machine Setup:
-To complete/skip this step, you just need a host which can run docker containers.  Any linux host will do, but if you want to host it on another system you can use Virtualbox and Vagrant by doing the following:
+The setup for this project assumes a blank Linux host (ubuntu 16.04) with git installed.
 
-1. Install Virtualbox
-```
-  DO IT YOURSELF
-```
-2. Install vagrant manually or use the provided install_vagrant.sh script.
-```
-  ./bin/install_vagrant.sh
-```
-3. After successful installation, start the VM and ssh into it using vagrant
-```
-  vagrant up
-  vagrant ssh
-```
+1. Clone repository
+  git clone git@github.com:taemon1337/gogs-compose.git
+  cd gogs-compose/
 
-### Docker Setup:
-1. Install docker manually or use the provided installation script
-```
+
+2. Install Docker
   ./bin/install_docker.sh
   docker -v
-```
-2. Docker Compose should be installed along with Docker, but verify
-```
   docker-compose -v
-```
 
-### Start Gogs and Postgres Containers:
-```
+
+3. Start docker-compose up
   docker-compose up
-```
 
-### Configure Gogs and Postgres:
-Gogs and Postgres both have small config option that need to be set to allow it to work correctly.
 
-Note, you may want to change to docker-compose file to point to a non /tmp/ directory for persistant storage.
-
-#### Configure Postgres
-1. Edit pg_hba.conf
-Edit the postgres host based authentication config in /tmp/gogs-postgres/pg_hba.conf to allow the postgres user to connect to the gogs database from the 172 network with username/password auth.
-```
-  #type database  username  network       auth
-  host  gogs      postgres  172.0.0.0/8   md5
-```
-2. Restart postgres container
-```
-  # stop foreground docker-compose up
+4. Stop docker-compose up
   <Ctrl+C>
+
+
+5. Modify pg_hba.conf at /tmp/gogs-postgres/pg_hba.conf
+  host  gogs  postgres  md5
+
+
+6. Restart docker-compose up
   docker-compose up
-```
 
-#### Configure gogs
-Navigate to gogs website to configure it.  Navigate to the host where gogs app is running (it may need be your VM's IP port 3000 for gogs)
 
+7. Visit Gogs web page
   http://127.0.0.1:3000/
 
-The first time it will redirect to the /install page, complete the following settings
-1. Select Postgres for database
-2. Enter 'postgres:5432' for 
-3. Enter 'postgres' for username (must match pg_hba.conf)
-4. Enter 'password123' for password (or change it in docker-compose.yml)
-5. Enter 'gogs' for database name (must match pg_hba.conf)
-6. Change the site url to match your browser bar (i.e. 'http://127.0.0.1:3000/') (used for links)
-7. Optionally set Admin account
-8. Click Install
 
-If everything worked, it will go to home page where you can login or setup an account.
+8. Enter the following values into the Gogs configuration
+  Database Type:    'PostgreSQL'            # select from dropdown
+  Host:             'postgres:5432'         # must match docker-compose.yml link
+  User:             'postgres'              # must match docker-compose.yml POSTGRES_USER and pg_hba.conf
+  Password:         'password123'           # must match docker-compose.yml POSTGRES_PASSWORD
+  Database Name:    'gogs'                  # must match docker-compose.yml POSTGRES_DB and pg_hba.conf
+  Domain:           <domain-name>           # option so that git remote add '<domain-name>' is correct
+  Application URL:  <machine-ip>:3000       # option so that links/redirects in gogs are accurate
 
 
+9. Click 'Install Gogs'
 
 
+10. Create account, login and enjoy Gogs!
+
+
+### Additional Tasks
+If you are actually going to use Gogs in a production or production-like environment, you will need complete the following tasks:
+
+#### Volume Storage
+In the provided docker-compose.yml file, a host volume is mapped from /tmp/gogs-data and /tmp/gogs-postgres. You will want to make sure you have a robust storage mechanism (like Convoy/NFS, RAID volume, or w/e).
+
+
+#### Docker Swarm
+In addition, I've included a docker-swarm.yml compose version 3.1 file which can be deployed on a Docker Swarm if you go that route.  In this file, I'm using the convoy NFS plugin for swarm nodes to use for storage.
+
+#### Logging, Backup, Security
+In a real production environment, you want to take care of logging, backups, and securing the environment as well, but these are outside the scope of this demo.
 
